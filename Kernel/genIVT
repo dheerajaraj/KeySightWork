@@ -1,0 +1,20 @@
+#! /usr/bin/perl -w
+use strict;
+my ($jump_loc, $self_point, $csf_point) = @ARGV;
+my $jl=sprintf("0x%X","$jump_loc");
+my $sp=sprintf("0x%X","$self_point");
+my $cp=sprintf("0x%X","$csf_point");
+my $hjl=hex("$jl");
+my $hsp=hex("$sp");
+my $hcp=hex("$cp");
+open(my $out, '>:raw', 'ivt.bin') or die "Unable to open: $!";
+print $out pack("V", 0x402000D1); # Signature
+print $out pack("V", "$hjl"); # Jump Location
+print $out pack("V", 0x0); # Reserved
+print $out pack("V", 0x0); # DCD pointer
+print $out pack("V", 0x0); # Boot Data
+print $out pack("V", "$hsp"); # Self Pointer
+print $out pack("V", "$hcp"); # CSF Pointer
+print $out pack("V", 0x0); # Reserved
+close($out);
+

@@ -1,0 +1,60 @@
+#!/bin/bash
+
+echo "Executing a bash commands to generate signed zImage ..."
+export PATH=../../cst-2.3.3/linux64/bin:$PATH
+
+cat << EOF > pyscript.py
+#!../../../../usr/bin/python
+import struct 
+import os
+import sys
+uimage_size = os.path.getsize('./zImage')
+ddr_addr = int('0x82000000',0) #0x82000000
+s="0x1000"
+div=int(s,16)
+pad_len = uimage_size - (uimage_size % div) + div
+auth_len = pad_len + 0x20
+sig_len = auth_len + 0x2000
+self_ptr = ddr_addr + pad_len
+csf_ptr = ddr_addr + auth_len
+jump_addr = ddr_addr + 0x1000
+output= str(hex(pad_len))+" "+str(hex(auth_len))+" "+str(hex(sig_len))+" "+str(self_ptr)+" "+str(csf_ptr)+" "+str(jump_addr)
+exit(output)
+EOF
+chmod 755 pyscript.py
+
+
+output=$((python pyscript.py ) 2>&1)
+IFS=', ' read -r -a array <<< "$output"
+echo "1) extend zIMage to ${array[0]}"
+objcopy -I binary -O binary --pad-to=${array[0]} --gap-fill=0x5A zImage zImage-pad.bin
+
+echo "2) generate IVT\n"
+echo "csf_bash: ${array[4]}"
+perl genIVT ${array[5]} ${array[3]} ${array[4]}
+
+
+echo "3) attach IVT\n"
+cat zImage-pad.bin ivt.bin>zImage-pad-ivt.bin
+
+echo "4) generate csf data\n"
+echo "    Blocks = 0x82000000 0x00000000 ${array[1]} \"zImage-pad-ivt.bin\"">>zImage.csf
+cst -o zImage_csf.bin -i zImage.csf 
+
+echo "5) appending csf bin file to zImage-pad-ivt.bin\n"
+cat zImage-pad-ivt.bin zImage_csf.bin > zImage-signed.bin 
+
+echo "Determining the size of zImage-pad-ivt.bin\n"
+size=$(hexdump -C zImage-pad-ivt.bin | tail -n 1)
+echo "new size $size \n"
+size_dec=$((16#$size))
+echo "new size $size_dec \n"
+pad=$((size_dec-size_dec%4096+4096))
+echo "new size $pad \n"
+hexsize="$( echo "obase=16; $pad"| bc )"
+echo "new size $hexsize \n" 
+
+echo "extend final image to nearest 4k boundary\n"
+objcopy -I binary -O binary --pad-to="${array[2]}" --gap-fill=0x5A zImage-signed.bin zImage-signed-pad.bin
+
+
