@@ -1,4 +1,5 @@
 These files are found in the cst folder directory: 'home/dheeraj/cst-2.3.3/linux64/bin/'. There are 4 files: 
 1) u-boot.imx which is the file that is compiled and built to ensure secure boot (separate from the one created from yocto project).
-2) u-boot.csf which is signed by the cst tool to generate the csf-uboot.bin file. --> 2 binary files here
-3) The 4th file is created by appending csf-uboot.bin file to the u-boot.imx file. The final file name is: u-boot.mx6sxsabresd
+2) u-bootsigned.csf which is signed by the cst tool to generate the csf-ubootsigned.bin file. --> 2 binary files here
+3) The 4th file is created by appending csf-ubootsigned.bin file to the u-boot.imx file. The final file name is: u-boot.mx6sxsabresd
+signed
