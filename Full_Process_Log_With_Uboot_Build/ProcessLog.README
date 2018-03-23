@@ -1,0 +1,5 @@
+Document containing steps to download and build u-boot, kernel and rootfs to sdcard. Since U-boot needs to be configured to enable secure boot, the U-boot needs to be built again.
+The generation of CSF file, to signing and padding of the u-boot image will also be discussed. Furthermore, a fair bit of the steps outlined online are obsolete. Therefore, we the
+problems encountered and the steps to overcome these problems have also been widely discussed. 2 new sections have been added to this process log where it describes how to
+configure the u-boot such that it only allows signed kernel images to boot. Also, the test procedures to revoke the SRK, in an event of compromised private keys, have also been 
+included in this process log. Enjoy ;)
