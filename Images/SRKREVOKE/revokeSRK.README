@@ -1,0 +1,7 @@
+3 files created from u-boot.imx that makes use of modifications in the CSF files to allow the imx6 processor to allow
+the SRK_REVOKE fuse to be blown. This is done so that an SRK can be revoked in an event where the private key is compromised
+or the CA is invalidated. 
+1) u-boot.imx
+2) u-boot.csf
+3) csf-uboot.bin
+4) u-boot.mx6sxsabresdSRKREVOKE
