@@ -1,0 +1,47 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1344\cocoasubrtf720
+{\fonttbl\f0\fnil\fcharset0 Menlo-Regular;\f1\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww22260\viewh10080\viewkind0
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+
+\f0\fs22 \cf0 \CocoaLigature0 => printenv\
+auth_length=0x54A000\
+baudrate=115200\
+boot_fdt=try\
+bootcmd=mmc dev $\{mmcdev\};mmc dev $\{mmcdev\};run habcheck;if mmc rescan && test $\{kernelPass\} = 1;then if run loadbootscript; then run bootscript;else if run loadimage; then run mmcboot;else run netboot; fi; fi;else echo Unsigned Kernel! Stopping boot...; fi\
+bootdelay=3\
+bootscript=echo Running bootscript from mmc ...; source\
+console=ttymxc0\
+ethact=FEC\
+ethaddr=00:04:9f:04:0d:78\
+ethprime=FEC\
+fdt_addr=0x88000000\
+fdt_file=imx6sx-sdb.dtb\
+fdt_high=0xffffffff\
+fileaddr=82000000\
+filesize=549e18\
+habcheck=load mmc 2:1 0x82000000 zImage;if hab_auth_img 0x82000000 0x54A000;then setenv kernelPass 0;else setenv kernelPass 1; fi\
+image=zImage\
+initrd_high=0xffffffff\
+ip_dyn=yes\
+kernelPass=0\
+loadaddr=0x82000000\
+loadbootscript=fatload mmc $\{mmcdev\}:$\{mmcpart\} $\{loadaddr\} $\{script\};\
+loadfdt=fatload mmc $\{mmcdev\}:$\{mmcpart\} $\{fdt_addr\} $\{fdt_file\}\
+loadimage=fatload mmc $\{mmcdev\}:$\{mmcpart\} $\{loadaddr\} $\{image\}\
+mmcargs=setenv bootargs console=$\{console\},$\{baudrate\} root=$\{mmcroot\}\
+mmcboot=echo Booting from mmc ...; run mmcargs; if test $\{boot_fdt\} = yes || test $\{boot_fdt\} = try; then if run loadfdt; then bootz $\{loadaddr\} - $\{fdt_addr\}; else if test $\{boot_fdt\} = try; then bootz; else echo WARN: Cannot load the DT; fi; fi; else bootz; fi;\
+mmcdev=2\
+mmcpart=1\
+mmcroot=/dev/mmcblk3p2 rootwait rw\
+netargs=setenv bootargs console=$\{console\},$\{baudrate\} root=/dev/nfs ip=dhcp nfsroot=$\{serverip\}:$\{nfsroot\},v3,tcp\
+netboot=echo Booting from net ...; run netargs; if test $\{ip_dyn\} = yes; then setenv get_cmd dhcp; else setenv get_cmd tftp; fi; $\{get_cmd\} $\{image\}; if test $\{boot_fdt\} = yes || test $\{boot_fdt\} = try; then if $\{get_cmd\} $\{fdt_addr\} $\{fdt_file\}; then bootz $\{loadaddr\} - $\{fdt_addr\}; else if test $\{boot_fdt\} = try; then bootz; else echo WARN: Cannot load the DT; fi; fi; else bootz; fi;\
+script=boot.scr\
+videomode=video=ctfb:x:800,y:480,depth:24,pclk:29850,le:89,ri:164,up:23,lo:10,hs:10,vs:10,sync:0,vmode:0\
+vtesting=echo "Turn off power supply if HAB events are shown"; sleep 5; load mmc 2:1 $\{loadaddr\} $\{image\}; hab_auth_img $\{loadaddr\} $\{auth_length\};sleep 5;\
+\
+Environment size: 2192/8188 bytes\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+
+\f1\fs24 \cf0 \CocoaLigature1 \
+}
