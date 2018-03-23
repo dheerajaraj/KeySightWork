@@ -1,0 +1,2 @@
+Signed images of kernel is generated and stored here along with the .dtb files. Unsigned kernel image is also included
+as zImage and signed kernel image is included as zImage-signed-ped.bin
