@@ -1,2 +1,3 @@
 Signed images of kernel is generated and stored here along with the .dtb files. Unsigned kernel image is also included
-as zImage and signed kernel image is included as zImage-signed-ped.bin
+as zImage and signed kernel image is included as zImage-signed-ped.bin. The code and the relevant tools to pad, sign and
+generate the kernel are uploaded in the KeySightWork/Kernel/ directory. 
